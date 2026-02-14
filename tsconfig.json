@@ -1,5 +1,6 @@
 {
-  "compilerOptions": {
+  "compilerOptions": {  
+    "baseUrl": ".",
     "target": "ES2017",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
@@ -18,17 +19,25 @@
         "name": "next"
       }
     ],
-    "paths": {
-      "@/*": ["./*"]
-    }
+   "paths": {
+      "@/*": ["./app/*"]
+      
+    },
+ 
+
+
   },
   "include": [
+      "./app/**/*.{js,ts,jsx,tsx}", 
+    "./components/**/*.{js,ts,jsx,tsx}",
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
+    
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
+, "app/admin/employeemanagement/EmployeeManagementClient/**/*.{ts,tsx,js,jsx}"
   ],
   "exclude": ["node_modules"]
 }

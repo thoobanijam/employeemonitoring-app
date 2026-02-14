@@ -1,0 +1,131 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  ADMIN
+  EMPLOYEE
+}
+
+model User {
+  id          String   @id @default(uuid())
+  email       String   @unique
+  phone       String?
+  password    String
+  role        Role
+  isActive    Boolean  @default(true)
+  employee    Employee?
+  otpCodes    OTP[]
+  createdAt   DateTime @default(now())
+}
+
+model OTP {
+  id        String   @id @default(uuid())
+  code      String
+  userId    String
+  expiresAt DateTime
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Organization {
+  id          String       @id @default(uuid())
+  name        String
+  departments Department[]
+}
+
+model Department {
+  id             String  @id @default(uuid())
+  name           String
+  organizationId String
+  teams          Team[]
+}
+
+model Team {
+  id           String @id @default(uuid())
+  name         String
+  departmentId String
+}
+
+model Employee {
+  id         String   @id @default(uuid())
+  firstName  String
+  lastName   String
+  email      String   @unique
+  phone      String? 
+  department String?
+  team       String?
+  role       Role     @default(EMPLOYEE)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+
+model Attendance {
+  id         String   @id @default(uuid())
+  employeeId String
+  checkIn    DateTime
+  checkOut   DateTime?
+  breaks     Json
+}
+
+model ActivityLog {
+  id         String   @id @default(uuid())
+  employeeId String
+  url        String?
+  appName    String?
+  screenshot String?
+  createdAt  DateTime @default(now())
+}
+
+model Task {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  assignedTo  String?   // Employee ID
+  department  String?
+  team        String?
+  priority    Priority  @default(MEDIUM)
+  status      Status    @default(PENDING)
+  deadline    DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+enum Status {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+model Message {
+  id         String   @id @default(uuid())
+  senderId   String
+  receiverId String
+  content    String
+  read       Boolean  @default(false)
+  createdAt  DateTime @default(now())
+}
+model HRMail {
+  id         String   @id @default(uuid())
+  senderId   String
+  receiverId String
+  subject    String
+  content    String
+  read       Boolean  @default(false)
+  starred    Boolean  @default(false)
+  archived   Boolean  @default(false)
+  createdAt  DateTime @default(now())
+}
+
+
